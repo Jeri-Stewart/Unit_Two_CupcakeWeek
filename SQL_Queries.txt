@@ -1,0 +1,58 @@
+CREATE TABLE customers (
+    customerID SERIAL PRIMARY KEY,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    email VARCHAR(100),
+    phone VARCHAR(20)
+);
+
+
+CREATE TABLE products (
+    productID SERIAL PRIMARY KEY,
+    brand VARCHAR(50),
+    model VARCHAR(50),
+    description TEXT,
+    price DOUBLE,
+    quantity INTEGER
+);
+
+
+CREATE TABLE transactions (
+    transactionID SERIAL PRIMARY KEY,
+    customerID INTEGER,
+    productID INTEGER,
+    transaction_date DATE,
+    FOREIGN KEY (customerID) REFERENCES customer(customerID),
+    FOREIGN KEY (productID) REFERENCES products(productID)
+);
+
+
+INSERT INTO customers ("firstName", "lastName", "email", "phone")
+VALUES ('John', 'Doe', 'johnDoe@gmail.com','555-555-5555'),
+       ('Jane', 'Doe', 'janeDoe@gmail.com', '000-000-0000');
+
+SELECT * FROM customers;
+
+INSERT INTO products ("brand", "model", "description", "price", "quantity")
+VALUES ('Trek', 'FX 3 Disc', 'A versatile hybrid bike for commuting and fitness.', 799.99, 5),
+       ('Giant', 'Defy Advanced Pro', 'A high-performance road bike with advanced carbon frame.', 3299.99, 3);
+
+SELECT * FROM products;
+
+INSERT INTO transactions ("customerID", "productID")
+VALUES (1, 1),
+       (2, 2),
+       (1, 1);
+
+
+UPDATE products
+SET "quantity" = 4
+WHERE "productID" = (SELECT "productID" FROM transactions WHERE "transactionID"= 1);
+
+UPDATE products
+SET "quantity" = 2
+WHERE "productID" = (SELECT"productID" FROM transactions WHERE "transactionID" = 2);
+
+UPDATE products
+SET "quantity" = 3
+WHERE "productID" = (SELECT "productID" FROM transactions WHERE "transactionID" = 3);
